@@ -25,10 +25,16 @@ To install generator-multi-screen-web from npm, run:
 npm install -g generator-multi-screen-web
 ```
 
-Finally, initiate the generator:
+Next, initiate the generator:
 
 ```bash
 yo multi-screen-web
+```
+
+Lastly, build and run the app and connect from your desktop browser or mobile devices
+
+```bash
+./build-and-run-mac.sh
 ```
 
 ### About the multi screen web application
