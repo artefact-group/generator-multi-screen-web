@@ -21,7 +21,7 @@ module.exports = yeoman.generators.Base.extend({
 
     // Have Yeoman greet the user.
     this.log(yosay(
-      'Welcome to the exceptional ' + chalk.red('MultiScreenWeb') + ' generator!'
+      'Welcome to the ' + chalk.red('multi screen web') + ' generator!'
     ));
 
     var basePath = path.basename(process.env.PWD);
@@ -45,15 +45,18 @@ module.exports = yeoman.generators.Base.extend({
 
       done();
     }.bind(this));
+
   },
 
-  // compose: function () {
-  //   this.composeWith('node-webkit', {
-  //     options: {
-  //       appName: 'BLAH'
-  //     }
-  //   });
-  // },
+  compose: function() {
+    this.log('You will now be prompted to download node-webkit for whichever platforms you need. ' + chalk.green('Only the default version of node webkit is supported, use others at your own risk.'));
+
+    this.composeWith('node-webkit:download', {
+      options: {
+        appName: 'BLAH'
+      }
+    });
+  },
 
   writing: {
     app: function () {
@@ -74,10 +77,6 @@ module.exports = yeoman.generators.Base.extend({
         this.destinationPath('Gruntfile.js'),
         this.props,
         this.tplSettings
-      );
-      this.fs.copy(
-        this.templatePath('resources'),
-        this.destinationPath('resources')
       );
       this.fs.copyTpl(
         this.templatePath('resources/mac'),

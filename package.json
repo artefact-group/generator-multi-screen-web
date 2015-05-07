@@ -21,6 +21,7 @@
   ],
   "dependencies": {
     "chalk": "^1.0.0",
+    "generator-node-webkit": "^1.0.3",
     "lodash": "^3.8.0",
     "yeoman-generator": "^0.19.0",
     "yo": "^1.4.6",
