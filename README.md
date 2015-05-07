@@ -35,7 +35,7 @@ yo multi-screen-web
 
 The generator creates everything you need to run a web server on OS X as a native application using node-webkit. It should also create working Windows executables but that hasn't been tested.
 
-After running the generator you can launch the application right away on OS X by running `build-and-run-mac.sh` in the project root folder.
+After running the generator in your new project folder with `yo multi-screen-web`, you can build and launch the application right away on OS X by running `./build-and-run-mac.sh` in the project root folder.
 
 The app launches and shows all of the devices that are configured to show content. Each device gets its own URL and there's also a control webpage that updates the current step in an aribtrary sequence of steps that are synchronized between all devices. The control page has buttons to skip to any step or advance forward and backward.
 
@@ -43,7 +43,9 @@ Each device that is configured to do something specific on a particular step, wi
 
 In the future there will be more complex communications enabled between devices.
 
-How do you configure the devices? Add as many as you need via the data/app.js file. The JSON object exported by that module defines the devices and what they do at each step in the script.
+### Configuring your devices
+
+The app controls as many devices as you need via the data/app.js file. The JSON object exported by that module defines the devices and what they do at each step in the script.
 
 The app is configured with an example script that makes a phone and a tablet page available. The phone shows different URLs on steps 1, 2 and 4 of the script. The tablet shows different URLs on steps 1 and 2 of the script.
 
