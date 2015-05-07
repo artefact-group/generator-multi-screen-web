@@ -1,0 +1,24 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/Users/sam/npm/bin/npm', 'install', 'open', '--save' ]
+2 info using npm@2.2.0
+3 info using node@v0.10.35
+4 verbose stack Error: Invalid name: "<%= name %>"
+4 verbose stack     at ensureValidName (/Users/sam/npm/lib/node_modules/npm/node_modules/normalize-package-data/lib/fixer.js:322:15)
+4 verbose stack     at Object.module.exports.fixNameField (/Users/sam/npm/lib/node_modules/npm/node_modules/normalize-package-data/lib/fixer.js:211:5)
+4 verbose stack     at /Users/sam/npm/lib/node_modules/npm/node_modules/normalize-package-data/lib/normalize.js:30:38
+4 verbose stack     at Array.forEach (native)
+4 verbose stack     at normalize (/Users/sam/npm/lib/node_modules/npm/node_modules/normalize-package-data/lib/normalize.js:29:15)
+4 verbose stack     at final (/Users/sam/npm/lib/node_modules/npm/node_modules/read-package-json/read-json.js:342:33)
+4 verbose stack     at then (/Users/sam/npm/lib/node_modules/npm/node_modules/read-package-json/read-json.js:126:33)
+4 verbose stack     at /Users/sam/npm/lib/node_modules/npm/node_modules/read-package-json/read-json.js:316:48
+4 verbose stack     at evalmachine.<anonymous>:208:20
+4 verbose stack     at OpenReq.Req.done (/Users/sam/npm/lib/node_modules/npm/node_modules/graceful-fs/graceful-fs.js:141:5)
+5 verbose cwd /Users/sam/adev/generator-multi-screen-web/app/templates
+6 error Darwin 14.3.0
+7 error argv "node" "/Users/sam/npm/bin/npm" "install" "open" "--save"
+8 error node v0.10.35
+9 error npm  v2.2.0
+10 error Invalid name: "<%= name %>"
+11 error If you need help, you may report this error at:
+11 error     <http://github.com/npm/npm/issues>
+12 verbose exit [ 1, true ]

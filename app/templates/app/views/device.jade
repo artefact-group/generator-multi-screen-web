@@ -1,0 +1,34 @@
+doctype html
+html(lang="en").device
+  head
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    meta(name='apple-mobile-web-app-capable' content='yes')
+    meta(name='apple-mobile-web-app-status-bar-style' content='black-translucent')
+    title <%%= name %%> #{device}
+    script(type='text/javascript').
+      config = {
+        isController: false,
+        host: "#{host}",
+        device: "#{device}",
+        firstStep: "#{firstStep}",
+        lastStep: "#{lastStep}",
+        script: !{script}
+      }
+    script(src='/js/socket.io.js')
+    script(src='/js/jquery-2.1.3.min.js')
+    script(src='/js/multiscreen-client.js')
+    link(rel='stylesheet' href='/css/main.css')
+  body.device
+    .debug
+      h1 This is device #{device}
+
+      p This device has one set of content
+
+      each url, index in JSON.parse(script).urls
+        if index >= firstStep && index <= lastStep
+          div url #{index} = #{url}
+
+    if position
+      iframe(frameborder="0" allowfullscreen style=position)
+    else
+      iframe(frameborder="0" allowfullscreen)

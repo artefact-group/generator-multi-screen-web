@@ -1,0 +1,23 @@
+//- Main app view
+h1 <%%= name %%>
+p App server
+
+h3 Controller
+p
+  a(href='#{controllerUrl}' target='_blank') #{controllerUrl}
+
+h3 Devices
+
+each deviceUrl in deviceUrls
+  p
+    a(href='#{deviceUrl}' target='_blank') #{deviceUrl}
+
+h3 Logs
+
+div.log-container
+    div.info-log
+
+h3 Errors
+
+div.log-container
+    div.error-log

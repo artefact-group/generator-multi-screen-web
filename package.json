@@ -1,0 +1,32 @@
+{
+  "name": "generator-multi-screen-web",
+  "version": "0.0.0",
+  "description": "Yeoman generator",
+  "license": "MIT",
+  "main": "app/index.js",
+  "repository": "artefact-group/generator-multi-screen-web",
+  "author": {
+    "name": "",
+    "email": "",
+    "url": "https://github.com/artefact-group"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "files": [
+    "app"
+  ],
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "dependencies": {
+    "chalk": "^1.0.0",
+    "lodash": "^3.8.0",
+    "yeoman-generator": "^0.19.0",
+    "yo": "^1.4.6",
+    "yosay": "^1.0.2"
+  },
+  "devDependencies": {
+    "mocha": "*"
+  }
+}
