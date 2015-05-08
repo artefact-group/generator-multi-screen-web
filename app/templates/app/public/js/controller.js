@@ -3,7 +3,7 @@ var TOUCH_EVENTS = 'click touchstart';
 function stateChanged() {
     $('#current-step')
         .removeClass('waiting')
-        .text(MSC.state.step);
+        .text(config.stepNames[MSC.state.step]);
 }
 
 $(function() {

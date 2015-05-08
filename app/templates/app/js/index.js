@@ -37,22 +37,58 @@ var App = require('./data/app.js');
 
 function processApp() {
     App.deviceNames = [];
+    // Process all devices
     _.each(App.devices, function(config, name) {
-        App.deviceNames.push(name);
         logger.info("Configuring device "+name);
+
+        App.deviceNames.push(name);
+
+        // Ensure config.steps (array of names) exists
+        App.stepNames = App.stepNames || [];
+
+        // Create reverse lookup, step name to array index
+        App.stepNameToIndex = [];
+        _.each(App.stepNames, function(name, index) {
+          App.stepNameToIndex[name] = index;
+        });
+
         var urls = [];
         config.clientConfig = { urls: urls };
-        _.each(config.stepUrls, function(url, step) {
-            step = parseInt(step);
-            urls[step] = url;
-            if (_.isUndefined(App.FIRST_STEP) || step < App.FIRST_STEP) {
-                App.FIRST_STEP = step;
+        _.each(config.stepUrls, function(url, key) {
+            // Convert step ids to indices
+            var id = App.stepNameToIndex[key];
+            if (_.isUndefined(id)) {
+              // key isn't a step name, check to see if it's a number
+              id = parseInt(key);
+              if (_.isNumber(id)) {
+                if (!App.stepNames[id]) {
+                  // This is an unknown step so add it. Key and value are the same in this case.
+                  App.stepNames[id] = id;
+                  App.stepNameToIndex[id] = id;
+                }
+              } else {
+                logger.error("["+name+"] Invalid step id "+key+". Step id must be a number or one of the step names declared in App.stepNames.");
+                return;
+              }
             }
-            if (_.isUndefined(App.LAST_STEP) || step > App.LAST_STEP) {
-                App.LAST_STEP = step;
+            //step = parseInt(App.stepNames[step]);
+            urls[id] = url;
+            if (_.isUndefined(App.FIRST_STEP) || id < App.FIRST_STEP) {
+                App.FIRST_STEP = id;
+            }
+            if (_.isUndefined(App.LAST_STEP) || id > App.LAST_STEP) {
+                App.LAST_STEP = id;
             }
         });
     });
+
+    for (var i = App.FIRST_STEP; i <= App.LAST_STEP; ++i) {
+      if (_.isUndefined(App.stepNames[i])) {
+        App.stepNames[i] = i;
+        App.stepNameToIndex[i] = i;
+      }
+    }
+
     _.each(App.devices, function(config, name) {
         var lastUrl = undefined;
         var urls = config.clientConfig.urls;
@@ -64,6 +100,8 @@ function processApp() {
             lastUrl = url || lastUrl;
         }
     });
+
+    console.log("APP: ",JSON.stringify(App));
 }
 
 processApp();
@@ -99,6 +137,7 @@ app.get('/controls', function(req, res) {
     res.render('controls', {
         host: config.serverHost(),
         device: 'controller',
+        stepNames: App.stepNames,
         firstStep: App.FIRST_STEP,
         lastStep: App.LAST_STEP
     });
@@ -132,6 +171,7 @@ app.get('/device/:id', function(req, res) {
         device: device,
         firstStep: App.FIRST_STEP,
         lastStep: App.LAST_STEP,
+        stepNames: App.stepNames,
         position: position,
         layout: layout,
         script: JSON.stringify(App.devices[device].clientConfig)
