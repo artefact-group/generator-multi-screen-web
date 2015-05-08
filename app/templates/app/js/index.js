@@ -106,27 +106,34 @@ app.get('/controls', function(req, res) {
 
 app.get('/device/:id', function(req, res) {
     var device = req.params.id;
-    var devicePosition = App.devices[device].position;
-    var position;
-    if (devicePosition) {
-        var width = devicePosition.width || 375;
-        var height = devicePosition.height || 667;
-        var top = devicePosition.top || 0;
-        var left = devicePosition.left || 0;
-        position = {
-            position: 'absolute',
-            top: top + 'px',
-            left: left + 'px',
-            width: (width - left) + 'px',
-            height: (height - top) + 'px'
-        }
+    var deviceConfig = App.devices[device] || {};
+    var devicePosition = deviceConfig.position || {};
+
+    var width = devicePosition.width || 375;
+    var height = devicePosition.height || 667;
+    var top = devicePosition.top || 0;
+    var left = devicePosition.left || 0;
+
+    var position = {
+        position: 'absolute',
+        top: top + 'px',
+        left: left + 'px',
+        width: (width - left) + 'px',
+        height: (height - top) + 'px',
     }
+
+    var layout = {
+        viewport: deviceConfig.viewport || 'width=device-width, initial-scale=1',
+        appleStatusBarStyle: deviceConfig.appleStatusBarStyle || 'black-translucent'
+    }
+
     res.render('device', {
         host: config.serverHost(),
         device: device,
         firstStep: App.FIRST_STEP,
         lastStep: App.LAST_STEP,
         position: position,
+        layout: layout,
         script: JSON.stringify(App.devices[device].clientConfig)
     });
 });
