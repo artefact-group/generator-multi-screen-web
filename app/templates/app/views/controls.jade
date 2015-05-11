@@ -13,7 +13,8 @@ html(lang="en")
         host: "#{host}",
         device: "#{device}",
         firstStep: "#{firstStep}",
-        lastStep: "#{lastStep}"
+        lastStep: "#{lastStep}",
+        stepNames: !{JSON.stringify(stepNames)}
       }
     script(src='/socket.io/socket.io.js')
     script(src='/js/jquery-2.1.3.min.js')
@@ -35,4 +36,4 @@ html(lang="en")
     div
       - var index = firstStep - 1;
       while ++index <= lastStep
-        button(data-step='#{index}') step #{index}
+        button(data-step='#{index}') #{stepNames[index]}

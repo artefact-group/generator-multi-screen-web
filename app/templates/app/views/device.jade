@@ -12,6 +12,7 @@ html(lang="en").device
         device: "#{device}",
         firstStep: "#{firstStep}",
         lastStep: "#{lastStep}",
+        stepNames: !{JSON.stringify(stepNames)},
         script: !{script}
       }
     script(src='/js/socket.io.js')
