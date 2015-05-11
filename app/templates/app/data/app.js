@@ -25,7 +25,7 @@ module.exports = {
             stepUrls: {
                 'part1_step1': 'http://www.apple.com/ipad/',
                 'part1_step3': 'https://www.youtube.com/embed/epHkaOxZhV8?t-2m49s',
-                6: 'http://github.com/'
+                5: 'http://github.com/'
             }
         }
     }
