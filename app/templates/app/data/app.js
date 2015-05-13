@@ -22,11 +22,21 @@ module.exports = {
             }
         },
         'tablet': {
-            stepUrls: {
-                'part1_step1': 'http://www.apple.com/ipad/',
-                'part1_step3': 'https://www.youtube.com/embed/epHkaOxZhV8?t-2m49s',
-                5: 'http://github.com/'
+            steps: {
+              part1_step1: {
+                type: 'iframe',
+                url: 'http://www.apple.com/ipad/'
+              },
+              part1_step3: {
+                type: 'iframe',
+                url: 'https://www.youtube.com/embed/epHkaOxZhV8?t-2m49s'
+              },
+              5: {
+                type: 'iframe',
+                url: 'http://github.com/'
+              }
             }
         }
     }
 }
+

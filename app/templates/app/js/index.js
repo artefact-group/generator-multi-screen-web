@@ -37,24 +37,43 @@ var App = require('./data/app.js');
 
 function processApp() {
     App.deviceNames = [];
+
+    // Ensure config.steps (array of names) exists
+    App.stepNames = App.stepNames || [];
+
+    // Create reverse lookup, step name to array index
+    App.stepNameToIndex = [];
+
     // Process all devices
     _.each(App.devices, function(config, name) {
         logger.info("Configuring device "+name);
 
         App.deviceNames.push(name);
 
-        // Ensure config.steps (array of names) exists
-        App.stepNames = App.stepNames || [];
+        config.steps = config.steps || {};
 
-        // Create reverse lookup, step name to array index
-        App.stepNameToIndex = [];
         _.each(App.stepNames, function(name, index) {
           App.stepNameToIndex[name] = index;
         });
 
-        var urls = [];
-        config.clientConfig = { urls: urls };
-        _.each(config.stepUrls, function(url, key) {
+        // Support deprecated format
+        if (config.stepUrls) {
+          _.each(config.stepUrls, function(url, key) {
+            config.steps[key] = config.steps[key] || {
+              type: 'iframe',
+              url: url
+            }
+          });
+          // logger.error("Use of the stepUrls field is supported but deprecated - it should be replaced by steps. The upgraded JSON is printed to the console.");
+          logger.error("Device "+name+" is using the deprecated stepUrls field. Replace:");
+          logger.error("  "+JSON.stringify({ stepUrls: config.stepUrls }));
+          logger.error("with:");
+          logger.error("  "+JSON.stringify({ steps: config.steps }));
+        }
+
+        var steps = [];
+        config.clientConfig = { steps: steps };
+        _.each(config.steps, function(step, key) {
             // Convert step ids to indices
             var id = App.stepNameToIndex[key];
             if (_.isUndefined(id)) {
@@ -72,7 +91,7 @@ function processApp() {
               }
             }
             //step = parseInt(App.stepNames[step]);
-            urls[id] = url;
+            steps[id] = step;
             if (_.isUndefined(App.FIRST_STEP) || id < App.FIRST_STEP) {
                 App.FIRST_STEP = id;
             }
@@ -90,14 +109,14 @@ function processApp() {
     }
 
     _.each(App.devices, function(config, name) {
-        var lastUrl = undefined;
-        var urls = config.clientConfig.urls;
+        var lastStep = undefined;
+        var steps = config.clientConfig.steps;
         for (var i = App.FIRST_STEP; i <= App.LAST_STEP; ++i) {
-            var url = urls[i];
-            if (lastUrl && !url) {
-                urls[i] = lastUrl;
+            var step = steps[i];
+            if (lastStep && !step) {
+                steps[i] = lastStep;
             }
-            lastUrl = url || lastUrl;
+            lastStep = step || lastStep;
         }
     });
 
@@ -178,19 +197,6 @@ app.get('/device/:id', function(req, res) {
     });
 });
 
-// app.post('/api/pagestate', function(req, res) {
-//     var page = req.body.id;
-//     console.log("Page state is",page);
-//     appState.page = page;
-//     switch (page) {
-//     case '0':
-//         // Send to all
-//         websocketSend(null, "page", page);
-//         break;
-//     }
-//     res.send({ success: true });
-// });
-
 
 function $( selector ) {
   return document.querySelector( selector )
@@ -215,66 +221,6 @@ io.on('connection', function(socket) {
         io.emit('state', appState.clientState);
     })
 });
-
-// var wss = new WebSocketServer({ port: config.WS_PORT, host: config.serverHost() });
-// var wssUrl = config.wsServer();
-// var wsByName = {};
-
-// function websocketSend(target, command, opts) {
-//     if (!target) {
-//         _.each(wsByName, function(val, key) {
-//             websocketSend(key, command, opts);
-//         });
-//         return;
-//     }
-//     var ws = wsByName[target];
-//     if (ws) {
-//         var optionString = "";
-//         if (_.isArray(opts)) {
-//             optionString = opts.join(':');
-//         } else if (_.isString(opts)) {
-//             optionString = opts;
-//         }
-//         var message = command;
-//         if (opts) {
-//             message += ":"+opts;
-//         }
-//         ws.send(message, function(error) {
-//             if (error) {
-//                 logger.error("WS: Failed to send",message,"to",target);
-//             }
-//         });
-//     } else {
-//         logger.error("No connection to WS client", target);
-//     }
-// }
-
-// var clientMessageHandlers = {
-//     connected: function(node) {
-//         logger.info("Client named '"+node+"' has connected");
-//     }
-// }
-
-// wss.on('connection', function(ws) {
-//     var name = null;
-//     ws.on('message', function(data, flags) {
-//         var tokens = data.split(':');
-//         if (tokens.length > 1) {
-//             // Received message from client
-//             if (name) {
-//                 delete wsByName[name];
-//             }
-//             wsByName[tokens[0]] = ws;
-
-//             if (clientMessageHandlers[tokens[1]]) {
-//                 // Call handler and pass the node name and up to two parameters
-//                 clientMessageHandlers[tokens[1]](tokens[0], tokens[2], tokens[3]);
-//             } else {
-//                 logger.info("Websocket message of type \""+tokens[1]+"\" from "+tokens[0]);
-//             }
-//         }
-//     });
-// });
 
 ////////////////////////////////////////////////////////////////////////
 // Start http/https servers
@@ -317,7 +263,6 @@ serverSecure.listen(config.SSL_PORT, function(){
     });
 
     window.addEventListener('close', function() {
-        // TODO: Cleanup? Close browser window?
         this.close(true);
     });
 });

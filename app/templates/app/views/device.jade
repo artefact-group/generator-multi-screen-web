@@ -15,21 +15,14 @@ html(lang="en").device
         stepNames: !{JSON.stringify(stepNames)},
         script: !{script}
       }
+    script(src='/bower_components/lodash/lodash.min.js')
     script(src='/js/socket.io.js')
     script(src='/js/jquery-2.1.3.min.js')
     script(src='/js/multiscreen-client.js')
     link(rel='stylesheet' href='/css/main.css')
   body.device
-    .debug
-      h1 This is device #{device}
-
-      p This device has one set of content
-
-      each url, index in JSON.parse(script).urls
-        if index >= firstStep && index <= lastStep
-          div url #{index} = #{url}
 
     if position
-      iframe(frameborder="0" allowfullscreen style=position)
+      iframe(frameborder="0" data-step-type="iframe" allowfullscreen style=position)
     else
-      iframe(frameborder="0" allowfullscreen)
+      iframe(frameborder="0" data-step-type="iframe" allowfullscreen)
