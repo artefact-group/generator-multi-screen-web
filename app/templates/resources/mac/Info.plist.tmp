@@ -7,7 +7,7 @@
 	<key>CFBundleDisplayName</key>
   <string><%% name %%></string>
 	<key>CFBundleExecutable</key>
-	<string>nw-js</string>
+	<string><%= nwExecutableName %></string>
 
 	<key>CFBundleIconFile</key>
 	<string>nw.icns</string>
