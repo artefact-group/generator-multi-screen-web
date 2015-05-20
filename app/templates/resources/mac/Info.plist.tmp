@@ -5,16 +5,16 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string><%% name %%></string>
+  <string><%% name %%></string>
 	<key>CFBundleExecutable</key>
-	<string>node-webkit</string>
+	<string><%= nwExecutableName %></string>
 
 	<key>CFBundleIconFile</key>
 	<string>nw.icns</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string><%% name %%></string>
+	<string>gnwTest</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.productivity</string>
 	<key>CFBundlePackageType</key>
