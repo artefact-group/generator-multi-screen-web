@@ -1,2 +1,6 @@
 grunt dist-mac32
-dist/macOS/<%%= name %%>.app/Contents/MacOS/node-webkit
+if [ -e "dist/macOS/<%%= name %%>.app/Contents/MacOS/nwjs" ]; then
+  dist/macOS/<%%= name %%>.app/Contents/MacOS/nwjs
+else
+  dist/macOS/<%%= name %%>.app/Contents/MacOS/node-webkit
+fi

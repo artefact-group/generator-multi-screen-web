@@ -38,7 +38,6 @@ function stateChanged() {
 }
 
 $(function() {
-  console.log('Loaded');
   var socket = io('http://'+location.hostname+':'+location.port);
   socket.on('state', function(data) {
     MSC.state = data;

@@ -12,7 +12,7 @@ module.exports = function (grunt) {
     app: 'app',
     dist: 'dist',
     distMac32: 'dist/macOS',
-    distMac64: 'dist/MacOS64',
+    distMac64: 'dist/macOS',
     distLinux32: 'dist/Linux32',
     distLinux64: 'dist/Linux64',
     distWin: 'dist/Win',
@@ -223,19 +223,51 @@ module.exports = function (grunt) {
   grunt.registerTask('chmod32', 'Add lost Permissions.', function () {
     var fs = require('fs'),
       path = config.distMac32 + '/<%%= name %%>.app/Contents/';
-    fs.chmodSync(path + 'Frameworks/node-webkit Helper EH.app/Contents/MacOS/node-webkit Helper EH', '555');
-    fs.chmodSync(path + 'Frameworks/node-webkit Helper NP.app/Contents/MacOS/node-webkit Helper NP', '555');
-    fs.chmodSync(path + 'Frameworks/node-webkit Helper.app/Contents/MacOS/node-webkit Helper', '555');
-    fs.chmodSync(path + 'MacOS/node-webkit', '555');
+    if (fs.existsSync(path + 'Frameworks/node-webkit Helper EH.app/Contents/MacOS/node-webkit Helper EH')) {
+      fs.chmodSync(path + 'Frameworks/node-webkit Helper EH.app/Contents/MacOS/node-webkit Helper EH', '555');
+    } else {
+      fs.chmodSync(path + 'Frameworks/nwjs Helper EH.app/Contents/MacOS/nwjs Helper EH', '555');
+    }
+    if (fs.existsSync(path + 'Frameworks/node-webkit Helper NP.app/Contents/MacOS/node-webkit Helper NP')) {
+      fs.chmodSync(path + 'Frameworks/node-webkit Helper NP.app/Contents/MacOS/node-webkit Helper NP', '555');
+    } else {
+      fs.chmodSync(path + 'Frameworks/nwjs Helper NP.app/Contents/MacOS/nwjs Helper NP', '555');
+    }
+    if (fs.existsSync(path + 'Frameworks/node-webkit Helper.app/Contents/MacOS/node-webkit Helper')) {
+      fs.chmodSync(path + 'Frameworks/node-webkit Helper.app/Contents/MacOS/node-webkit Helper', '555');
+    } else {
+      fs.chmodSync(path + 'Frameworks/nwjs Helper.app/Contents/MacOS/nwjs Helper', '555');
+    }
+    if (fs.existsSync(path + 'MacOS/node-webkit')) {
+      fs.chmodSync(path + 'MacOS/node-webkit', '555');
+    } else {
+      fs.chmodSync(path + 'MacOS/nwjs', '555');
+    }
   });
 
   grunt.registerTask('chmod64', 'Add lost Permissions.', function () {
     var fs = require('fs'),
       path = config.distMac64 + '/<%%= name %%>.app/Contents/';
-    fs.chmodSync(path + 'Frameworks/node-webkit Helper EH.app/Contents/MacOS/node-webkit Helper EH', '555');
-    fs.chmodSync(path + 'Frameworks/node-webkit Helper NP.app/Contents/MacOS/node-webkit Helper NP', '555');
-    fs.chmodSync(path + 'Frameworks/node-webkit Helper.app/Contents/MacOS/node-webkit Helper', '555');
-    fs.chmodSync(path + 'MacOS/node-webkit', '555');
+    if (fs.existsSync(path + 'Frameworks/node-webkit Helper EH.app/Contents/MacOS/node-webkit Helper EH')) {
+      fs.chmodSync(path + 'Frameworks/node-webkit Helper EH.app/Contents/MacOS/node-webkit Helper EH', '555');
+    } else {
+      fs.chmodSync(path + 'Frameworks/nwjs Helper EH.app/Contents/MacOS/nwjs Helper EH', '555');
+    }
+    if (fs.existsSync(path + 'Frameworks/node-webkit Helper NP.app/Contents/MacOS/node-webkit Helper NP')) {
+      fs.chmodSync(path + 'Frameworks/node-webkit Helper NP.app/Contents/MacOS/node-webkit Helper NP', '555');
+    } else {
+      fs.chmodSync(path + 'Frameworks/nwjs Helper NP.app/Contents/MacOS/nwjs Helper NP', '555');
+    }
+    if (fs.existsSync(path + 'Frameworks/node-webkit Helper.app/Contents/MacOS/node-webkit Helper')) {
+      fs.chmodSync(path + 'Frameworks/node-webkit Helper.app/Contents/MacOS/node-webkit Helper', '555');
+    } else {
+      fs.chmodSync(path + 'Frameworks/nwjs Helper.app/Contents/MacOS/nwjs Helper', '555');
+    }
+    if (fs.existsSync(path + 'MacOS/node-webkit')) {
+      fs.chmodSync(path + 'MacOS/node-webkit', '555');
+    } else {
+      fs.chmodSync(path + 'MacOS/nwjs', '555');
+    }
   });
 
   grunt.registerTask('createLinuxApp', 'Create linux distribution.', function (version) {
@@ -324,6 +356,26 @@ module.exports = function (grunt) {
     });
   });
 
+  grunt.registerTask('createPlistFile', 'set node webkit and app relevant information to a new plist file', function() {
+    var metadata = grunt.file.readJSON('.yo-rc.json');
+    var resourcesPath = config.resources;
+    var nwExecuteable = 'nwjs';
+    if (metadata.nodeWebkitVersion.indexOf('v0.8.') === 0 || metadata.nodeWebkitVersion.indexOf('v0.9.') === 0 || metadata.nodeWebkitVersion.indexOf('v0.10.') === 0 || metadata.nodeWebkitVersion.indexOf('v0.11.') === 0) {
+      nwExecuteable = 'node-webkit';
+    }
+    var infoPlistTmp = grunt.file.read(resourcesPath + '/mac/Info.plist.tmp', {
+      encoding: 'UTF8'
+    });
+    var infoPlist = grunt.template.process(infoPlistTmp, {
+      data: {
+        nwExecutableName: nwExecuteable
+      }
+    });
+    grunt.file.write(resourcesPath + '/mac/Info.plist', infoPlist, {
+      encoding: 'UTF8'
+    });
+  })
+
   grunt.registerTask('dist-linux', [
     // 'jshint',
     'clean:distLinux64',
@@ -351,6 +403,7 @@ module.exports = function (grunt) {
   grunt.registerTask('dist-mac', [
     // 'jshint',
     'clean:distMac64',
+    'createPlistFile',
     'copy:webkit64',
     'copy:appMacos64',
     'rename:macApp64',
@@ -360,6 +413,7 @@ module.exports = function (grunt) {
   grunt.registerTask('dist-mac32', [
     // 'jshint',
     'clean:distMac32',
+    'createPlistFile',
     'copy:webkit32',
     'copy:appMacos32',
     'rename:macApp32',
@@ -367,7 +421,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('check', [
-    // 'jshint'
+    'jshint'
   ]);
 
   grunt.registerTask('dmg', 'Create dmg from previously created app folder in dist.', function () {

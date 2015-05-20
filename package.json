@@ -1,6 +1,6 @@
 {
   "name": "generator-multi-screen-web",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A yeoman generator that creates a server that serves multiple synchronized webpages for click-through prototypes on multiple screens.",
   "license": "MIT",
   "main": "app/index.js",
@@ -20,8 +20,10 @@
     "yeoman-generator"
   ],
   "dependencies": {
+    "bower": "^1.4.1",
     "chalk": "^1.0.0",
-    "generator-node-webkit": "^1.0.3",
+    "generator-node-webkit": "^1.0.4",
+    "grunt-cli": "^0.1.13",
     "lodash": "^3.8.0",
     "yeoman-generator": "^0.19.0",
     "yo": "^1.4.6",

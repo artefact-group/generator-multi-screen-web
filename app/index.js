@@ -51,10 +51,8 @@ module.exports = yeoman.generators.Base.extend({
   compose: function() {
     this.log('You will now be prompted to download node-webkit for whichever platforms you need. ' + chalk.green('Only the default version of node webkit is supported, use others at your own risk.'));
 
-    this.composeWith('node-webkit:download', {
-      options: {
-        appName: 'BLAH'
-      }
+    this.composeWith('node-webkit:download', {}, {
+      local: require.resolve('generator-node-webkit/download')
     });
   },
 
