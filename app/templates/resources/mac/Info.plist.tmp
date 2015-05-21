@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-  <string><%% name %%></string>
+  <string><%%= name %%></string>
 	<key>CFBundleExecutable</key>
 	<string><%= nwExecutableName %></string>
 
