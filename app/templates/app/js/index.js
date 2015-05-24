@@ -26,7 +26,7 @@ logger.configureType('error');
 // Create web server and socket server
 var app = express();
 var server = http.createServer(app);
-var serverSecure = https.createServer(config.SSL_OPTIONS, app);
+// var serverSecure = https.createServer(config.SSL_OPTIONS, app);
 var io = require('socket.io')(server);
 
 ////////////////////////////////////////////////////////////////////////
@@ -252,10 +252,7 @@ function initialize() {
     }
 }
 
-server.listen(3001, function() {
-});
-
-serverSecure.listen(config.SSL_PORT, function(){
+function serverUp() {
     config.pickServer(function() {
         startupState.serverFound = true;
 
@@ -265,7 +262,11 @@ serverSecure.listen(config.SSL_PORT, function(){
     window.addEventListener('close', function() {
         this.close(true);
     });
-});
+}
+
+server.listen(config.HTTP_PORT, serverUp);
+
+//serverSecure.listen(config.SSL_PORT, serverUp);
 
 window.addEventListener( 'DOMContentLoaded', function() {
     startupState.domLoaded = true;

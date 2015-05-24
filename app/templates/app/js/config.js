@@ -53,15 +53,16 @@ function pickServer(callback) {
 }
 
 var config = {
-    SSL_PORT: 3443,
+    HTTP_PORT: 3001,
+    // SSL_PORT: 3443,
 
-    SSL_OPTIONS: {
-        key: fs.readFileSync('./ssl/server.key'),
-        cert: fs.readFileSync('./ssl/server.crt'),
-        ca: fs.readFileSync('./ssl/ca.crt'),
-        requestCert: true,
-        rejectUnauthorized: false
-    },
+    // SSL_OPTIONS: {
+    //     key: fs.readFileSync('./ssl/server.key'),
+    //     cert: fs.readFileSync('./ssl/server.crt'),
+    //     ca: fs.readFileSync('./ssl/ca.crt'),
+    //     requestCert: true,
+    //     rejectUnauthorized: false
+    // },
 
     // Call this function to find the current server
     pickServer: pickServer,
