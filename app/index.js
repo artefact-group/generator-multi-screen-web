@@ -5,6 +5,7 @@ var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require('lodash');
 var os = require('os');
+var ghdownload = require('github-download');
 
 module.exports = yeoman.generators.Base.extend({
   initializing: function () {
@@ -12,7 +13,7 @@ module.exports = yeoman.generators.Base.extend({
     this.tplSettings = {
       escape: /<%%-([\s\S]+?)%%>/g,
       evaluate: /<%%([\s\S]+?)%%>/g,
-      interpolate: /<%%=([\s\S]+?)%%>/g
+      interpolate: /MSW_([\s\S]+?)_PLACEHOLDER/g
     }
   },
 
@@ -56,28 +57,39 @@ module.exports = yeoman.generators.Base.extend({
     });
   },
 
+  downloadMSW: function() {
+    var done = this.async();
+
+    this.tempFolderPrefix = './_temp_MSW/';
+    this.tempFolder = this.destinationPath(this.tempFolderPrefix);
+    ghdownload({ user: 'artefact-group', repo: 'multi-screen-web', ref: 'master' }, this.tempFolder)
+    .on('end', function() {
+      done();
+    });
+  },
+
   writing: {
     app: function () {
       this.fs.copyTpl(
-        this.templatePath('package.json'),
+        this.destinationPath(this.tempFolderPrefix + 'package.json'),
         this.destinationPath('package.json'),
         this.props,
         this.tplSettings
       );
       this.fs.copyTpl(
-        this.templatePath('app'),
+        this.destinationPath(this.tempFolderPrefix + 'app'),
         this.destinationPath('app'),
         this.props,
         this.tplSettings
       );
       this.fs.copyTpl(
-        this.templatePath('Gruntfile.js'),
+        this.destinationPath(this.tempFolderPrefix + 'Gruntfile.js'),
         this.destinationPath('Gruntfile.js'),
         this.props,
         this.tplSettings
       );
       this.fs.copyTpl(
-        this.templatePath('resources/mac'),
+        this.destinationPath(this.tempFolderPrefix + 'resources/mac'),
         this.destinationPath('resources/mac'),
         this.props,
         this.tplSettings
@@ -86,25 +98,25 @@ module.exports = yeoman.generators.Base.extend({
 
     projectfiles: function () {
       this.fs.copy(
-        this.templatePath('bower.json'),
+        this.destinationPath(this.tempFolderPrefix + 'bower.json'),
         this.destinationPath('bower.json')
       );
       this.fs.copy(
-        this.templatePath('.bowerrc'),
+        this.destinationPath(this.tempFolderPrefix + '.bowerrc'),
         this.destinationPath('.bowerrc')
       );
       this.fs.copy(
-        this.templatePath('gitignore'),
+        this.destinationPath(this.tempFolderPrefix + '.gitignore'),
         this.destinationPath('.gitignore')
       );
       this.fs.copyTpl(
-        this.templatePath('build-and-run-mac.sh'),
+        this.destinationPath(this.tempFolderPrefix + 'build-and-run-mac.sh'),
         this.destinationPath('build-and-run-mac.sh'),
         this.props,
         this.tplSettings
       );
       this.fs.copy(
-        this.templatePath('jshintrc'),
+        this.destinationPath(this.tempFolderPrefix + '.jshintrc'),
         this.destinationPath('.jshintrc')
       );
     }
@@ -112,5 +124,9 @@ module.exports = yeoman.generators.Base.extend({
 
   install: function () {
     this.installDependencies();
+  },
+
+  end: function() {
+    this.fs.delete(this.destinationPath(this.tempFolderPrefix));
   }
 });
