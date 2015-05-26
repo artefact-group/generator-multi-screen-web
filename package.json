@@ -1,6 +1,6 @@
 {
   "name": "generator-multi-screen-web",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "A yeoman generator that creates a server that serves multiple synchronized webpages for click-through prototypes on multiple screens.",
   "license": "MIT",
   "main": "app/index.js",
